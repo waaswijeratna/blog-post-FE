@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import CommentSection from "../components/CommentSection"; // Import the new component
+
+interface Comment {
+  name: string;
+  comment: string;
+  date: string;
+}
 
 interface Post {
   _id: string;
@@ -7,19 +14,26 @@ interface Post {
   content: string;
   thumbnail: string;
   dateCreated: string;
+  comments?: Comment[];
 }
 
 const BlogDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Get the post ID from the URL
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [post, setPost] = useState<Post | null>(null);
 
   useEffect(() => {
     fetch(`http://localhost:3000/api/posts/${id}`)
       .then((res) => res.json())
-      .then((data) => setPost(data))
+      .then((data: Post) => setPost(data))
       .catch((err) => console.error("Failed to load post:", err));
   }, [id]);
+
+  const handleCommentAdded = (newComment: Comment) => {
+    setPost((prev) =>
+      prev ? { ...prev, comments: prev.comments ? [...prev.comments, newComment] : [newComment] } : prev
+    );
+  };
 
   if (!post) return <p>Loading...</p>;
 
@@ -32,7 +46,10 @@ const BlogDetail: React.FC = () => {
       <h1 className="text-2xl font-bold mt-4">{post.title}</h1>
       <p className="text-gray-500">{new Date(post.dateCreated).toLocaleDateString()}</p>
       <div className="mt-4" dangerouslySetInnerHTML={{ __html: post.content }} />
-    </div>
+
+      {/* Comments Section */}
+      <CommentSection postId={id ?? ""} comments={post.comments || []} onCommentAdded={handleCommentAdded} />
+      </div>
   );
 };
 
