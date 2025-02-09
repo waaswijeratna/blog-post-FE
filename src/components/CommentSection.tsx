@@ -41,7 +41,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, comments, onCom
     };
 
     try {
-      const response = await fetch(`http://localhost:3000/api/posts/${postId}/comments`, {
+      const response = await fetch(`https://blog-post-bxf2hxd0ejgsazf0.eastasia-01.azurewebsites.net/api/posts/${postId}/comments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newComment),

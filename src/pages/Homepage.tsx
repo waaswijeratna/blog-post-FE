@@ -25,7 +25,7 @@ const HomePage: React.FC = () => {
     const fetchPosts = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/posts?search=${encodeURIComponent(
+          `https://blog-post-bxf2hxd0ejgsazf0.eastasia-01.azurewebsites.net/api/posts?search=${encodeURIComponent(
             searchQuery
           )}&page=${currentPage}&limit=${postsPerPage}`
         );

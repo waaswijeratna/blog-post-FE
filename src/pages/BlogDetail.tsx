@@ -25,7 +25,7 @@ const BlogDetail: React.FC = () => {
   const [post, setPost] = useState<Post | null>(null);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/posts/${id}`)
+    fetch(`https://blog-post-bxf2hxd0ejgsazf0.eastasia-01.azurewebsites.net/api/posts/${id}`)
       .then((res) => res.json())
       .then((data: Post) => setPost(data))
       .catch((err) => console.error("Failed to load post:", err));

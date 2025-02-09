@@ -46,13 +46,13 @@ const CreateBlog: React.FC = () => {
 
       let response;
       if (postData) {
-        response = await fetch(`http://localhost:3000/api/posts/${postData._id}`, {
+        response = await fetch(`https://blog-post-bxf2hxd0ejgsazf0.eastasia-01.azurewebsites.net/api/posts/${postData._id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(postPayload),
         });
       } else {
-        response = await fetch("http://localhost:3000/api/posts", {
+        response = await fetch("https://blog-post-bxf2hxd0ejgsazf0.eastasia-01.azurewebsites.net/api/posts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(postPayload),

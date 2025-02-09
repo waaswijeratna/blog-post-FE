@@ -34,7 +34,7 @@ const ModeratorDashboard: React.FC = () => {
       const userId = userData ? JSON.parse(userData).id : null;
       try {
         const response = await fetch(
-          `http://localhost:3000/api/posts?search=${encodeURIComponent(searchQuery)}&page=${currentPage}&limit=${postsPerPage}&userId=${userId}`
+          `https://blog-post-bxf2hxd0ejgsazf0.eastasia-01.azurewebsites.net/api/posts?search=${encodeURIComponent(searchQuery)}&page=${currentPage}&limit=${postsPerPage}&userId=${userId}`
         );
         const data = await response.json();
         setPosts(data.posts);
@@ -64,7 +64,7 @@ const ModeratorDashboard: React.FC = () => {
   const handleDeleteClick = async (postId: string) => {
     if (window.confirm("Are you sure you want to delete this post?")) {
       try {
-        const response = await fetch(`http://localhost:3000/api/posts/${postId}`, {
+        const response = await fetch(`https://blog-post-bxf2hxd0ejgsazf0.eastasia-01.azurewebsites.net/api/posts/${postId}`, {
           method: "DELETE",
         });
 

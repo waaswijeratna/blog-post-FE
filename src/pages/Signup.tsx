@@ -19,7 +19,7 @@ const Signup = () => {
 
   const handleSignup = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/signup", {
+      const response = await fetch("https://blog-post-bxf2hxd0ejgsazf0.eastasia-01.azurewebsites.net/api/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, name }),
