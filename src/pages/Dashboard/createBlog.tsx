@@ -1,22 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom"; // For accessing passed data
+import { useLocation, useNavigate } from "react-router-dom";
 import TinyEditor from "../../components/TinyEditor";
 import ThumbnailUpload from "../../components/ThumbnailUpload";
 
 const CreateBlog: React.FC = () => {
-  const { state } = useLocation(); // Access passed data from navigate
-  const postData = state?.post; // Destructure post data (this will be undefined if no data is passed)
-  const navigate = useNavigate(); // For redirecting after success
+  const { state } = useLocation();
+  const postData = state?.post;
+  const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [thumbnail, setThumbnail] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState<{ id: string; name: string; email: string } | null>(null);
 
   useEffect(() => {
+    // Retrieve user data from localStorage
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser)); // Parse and store user info in state
+    }
+
     if (postData) {
-      // If post data is provided (i.e., from the Update button click)
-      console.log("Post data received:", postData);
       setTitle(postData.title);
       setContent(postData.content);
       setThumbnail(postData.thumbnail);
@@ -24,27 +29,34 @@ const CreateBlog: React.FC = () => {
   }, [postData]);
 
   const handleSubmit = async () => {
-    if (!title.trim() || !content.trim() || !thumbnail) {
+    if (!title.trim() || !content.trim() || !thumbnail || !user) {
       alert("All fields are required!");
       return;
     }
 
     setLoading(true);
     try {
+      const postPayload = {
+        title,
+        content,
+        thumbnail,
+        userId: user.id,
+        authorName: user.name,
+        authorEmail: user.email,
+      };
+
       let response;
       if (postData) {
-        // If it's an update, make a PUT request
         response = await fetch(`http://localhost:3000/api/posts/${postData._id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ title, content, thumbnail }),
+          body: JSON.stringify(postPayload),
         });
       } else {
-        // If it's a new post, make a POST request
         response = await fetch("http://localhost:3000/api/posts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ title, content, thumbnail }),
+          body: JSON.stringify(postPayload),
         });
       }
 
@@ -53,7 +65,7 @@ const CreateBlog: React.FC = () => {
         setTitle("");
         setContent("");
         setThumbnail(null);
-        navigate("/dashboard"); // Navigate to posts list after success
+        navigate("/dashboard");
       } else {
         throw new Error("Failed to save the post.");
       }
@@ -88,8 +100,8 @@ const CreateBlog: React.FC = () => {
         />
         <ThumbnailUpload
           onUploadComplete={setThumbnail}
-          currentThumbnail={postData?.thumbnail} // Passing the existing thumbnail URL if updating
-          onRemoveComplete={(imageUrl) => setThumbnail(imageUrl)} // Handling removal by updating the state
+          currentThumbnail={postData?.thumbnail}
+          onRemoveComplete={(imageUrl) => setThumbnail(imageUrl)}
         />
         <TinyEditor value={content} onChange={setContent} />
       </div>

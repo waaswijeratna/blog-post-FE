@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import { motion } from "framer-motion";
 
 interface Comment {
   name: string;
@@ -22,15 +23,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, comments, onCom
 
   const commentsPerPage = 5;
   const totalPages = Math.ceil(comments.length / commentsPerPage);
-
-  // Reverse comments to show the latest first
   const sortedComments = [...comments].reverse();
-
-  // Get the comments for the current page
-  const paginatedComments = sortedComments.slice(
-    (currentPage - 1) * commentsPerPage,
-    currentPage * commentsPerPage
-  );
+  const paginatedComments = sortedComments.slice((currentPage - 1) * commentsPerPage, currentPage * commentsPerPage);
 
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +34,6 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, comments, onCom
     }
 
     setLoadingComment(true);
-
     const newComment: Comment = {
       name: commentName.trim(),
       comment: commentText.trim(),
@@ -50,9 +43,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, comments, onCom
     try {
       const response = await fetch(`http://localhost:3000/api/posts/${postId}/comments`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newComment),
       });
 
@@ -60,7 +51,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, comments, onCom
         onCommentAdded(newComment);
         setCommentName("");
         setCommentText("");
-        setCurrentPage(1); // Reset to first page after new comment
+        setCurrentPage(1);
       } else {
         throw new Error("Failed to add comment.");
       }
@@ -73,44 +64,49 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, comments, onCom
   };
 
   return (
-    <div className="mt-8">
-      <h2 className="text-xl font-semibold mb-4">Comments</h2>
+    <div className="mt-8 bg-purple-50 p-6 rounded-xl shadow-lg">
+      <h2 className="text-2xl font-semibold text-purple-700 mb-4">Comments</h2>
 
       {comments.length > 0 ? (
         <div>
           {paginatedComments.map((c, index) => (
-            <div key={index} className="mb-4 p-4 border rounded">
-              <p className="font-bold">
+            <motion.div 
+              key={index} 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="mb-4 p-4 bg-white border border-purple-200 rounded-lg shadow-sm"
+            >
+              <p className="font-bold text-purple-700">
                 {c.name} <span className="text-sm text-gray-500">({new Date(c.date).toLocaleString()})</span>
               </p>
-              <p>{c.comment}</p>
-            </div>
+              <p className="text-gray-700 mt-1">{c.comment}</p>
+            </motion.div>
           ))}
 
-          {/* Material-UI Pagination */}
-          <Stack spacing={2} className="mt-4">
+          <Stack spacing={2} className="mt-4 flex justify-center">
             <Pagination
               count={totalPages}
               page={currentPage}
               onChange={(_, page) => setCurrentPage(page)}
               variant="outlined"
               shape="rounded"
+              color="secondary"
             />
           </Stack>
         </div>
       ) : (
-        <p>No comments yet. Be the first to comment!</p>
+        <p className="text-gray-600">No comments yet. Be the first to comment!</p>
       )}
 
-      {/* Comment Form */}
-      <form onSubmit={handleCommentSubmit} className="mt-6">
+      <form onSubmit={handleCommentSubmit} className="mt-6 bg-white p-4 rounded-xl shadow-md">
         <div className="mb-4">
           <input
             type="text"
             placeholder="Your name"
             value={commentName}
             onChange={(e) => setCommentName(e.target.value)}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border border-purple-300 rounded-md focus:ring-2 focus:ring-purple-500"
           />
         </div>
         <div className="mb-4">
@@ -118,13 +114,19 @@ const CommentSection: React.FC<CommentSectionProps> = ({ postId, comments, onCom
             placeholder="Your comment"
             value={commentText}
             onChange={(e) => setCommentText(e.target.value)}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border border-purple-300 rounded-md focus:ring-2 focus:ring-purple-500"
             rows={4}
           />
         </div>
-        <button type="submit" disabled={loadingComment} className="bg-blue-500 text-white px-4 py-2 rounded">
+        <motion.button 
+          type="submit" 
+          disabled={loadingComment} 
+          whileHover={{ scale: 1.05 }} 
+          whileTap={{ scale: 0.95 }}
+          className="bg-purple-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-purple-700 transition disabled:bg-purple-300"
+        >
           {loadingComment ? "Posting..." : "Post Comment"}
-        </button>
+        </motion.button>
       </form>
     </div>
   );

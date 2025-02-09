@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -8,6 +9,12 @@ const Login = () => {
   const [error, setError] = useState("");
   const auth = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (auth?.user) {
+      navigate("/dashboard");
+    }
+  }, [auth?.user, navigate]);
 
   const handleLogin = async () => {
     try {
@@ -20,7 +27,7 @@ const Login = () => {
       const data = await response.json();
       if (response.ok) {
         auth?.login(data.token, data.user);
-        navigate("/dashboard"); // Redirect to dashboard after successful login
+        navigate("/dashboard");
       } else {
         setError(data.message);
       }
@@ -30,12 +37,47 @@ const Login = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <button onClick={handleLogin}>Login</button>
+    <div className="flex justify-center items-center h-screen bg-purple-600">
+      <motion.div
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-white p-8 rounded-2xl shadow-lg max-w-sm w-full"
+      >
+        <h2 className="text-2xl font-semibold text-purple-700 mb-4">Login</h2>
+        {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
+        <input
+          type="email"
+          placeholder="Email"
+          className="w-full p-2 border rounded-md mb-3"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          className="w-full p-2 border rounded-md mb-3"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={handleLogin}
+          className="w-full bg-purple-700 text-white py-2 rounded-md mt-2 hover:bg-purple-800"
+        >
+          Login
+        </motion.button>
+        <p className="text-sm text-gray-600 mt-4 text-center">
+          Don't have an account?{" "}
+          <span
+            className="text-purple-600 cursor-pointer hover:underline"
+            onClick={() => navigate("/signup")}
+          >
+            Sign up
+          </span>
+        </p>
+      </motion.div>
     </div>
   );
 };
