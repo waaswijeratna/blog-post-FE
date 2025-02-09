@@ -25,7 +25,7 @@ const ModeratorDashboard: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const { logout } = useAuth(); // Use logout function
+  const { logout } = useAuth(); 
   const postsPerPage = 9;
 
   useEffect(() => {

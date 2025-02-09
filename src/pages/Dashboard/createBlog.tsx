@@ -15,10 +15,9 @@ const CreateBlog: React.FC = () => {
   const [user, setUser] = useState<{ id: string; name: string; email: string } | null>(null);
 
   useEffect(() => {
-    // Retrieve user data from localStorage
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
-      setUser(JSON.parse(storedUser)); // Parse and store user info in state
+      setUser(JSON.parse(storedUser)); 
     }
 
     if (postData) {
@@ -81,11 +80,7 @@ const CreateBlog: React.FC = () => {
     <div className="my-4 mx-16">
       <div className="flex flex-row justify-between items-center mb-6">
         <h2 className="text-2xl text-purple-800">{postData ? "Update Your Blog" : "Write Your Thoughts..."}</h2>
-        <button
-          className={`py-2 px-3 rounded-md text-white ${!title.trim() || !content.trim() || !thumbnail ? "bg-gray-300 cursor-not-allowed" : "bg-purple-500 hover:bg-purple-600"}`}
-          onClick={handleSubmit}
-          disabled={!title.trim() || !content.trim() || !thumbnail || loading}
-        >
+        <button className={`py-2 px-3 rounded-md text-white ${!title.trim() || !content.trim() || !thumbnail ? "bg-gray-300 cursor-not-allowed" : "bg-purple-500 hover:bg-purple-600"}`} onClick={handleSubmit} disabled={!title.trim() || !content.trim() || !thumbnail || loading}>
           {loading ? "Submitting..." : postData ? "Update Blog" : "Submit Blog"}
         </button>
       </div>
@@ -98,11 +93,7 @@ const CreateBlog: React.FC = () => {
           onChange={(e) => setTitle(e.target.value)}
           className="border-2 border-gray-300 hover:border-purple-500 duration-300 p-2 w-full my-2 rounded-md"
         />
-        <ThumbnailUpload
-          onUploadComplete={setThumbnail}
-          currentThumbnail={postData?.thumbnail}
-          onRemoveComplete={(imageUrl) => setThumbnail(imageUrl)}
-        />
+        <ThumbnailUpload onUploadComplete={setThumbnail} currentThumbnail={postData?.thumbnail} onRemoveComplete={(imageUrl) => setThumbnail(imageUrl)}/>
         <TinyEditor value={content} onChange={setContent} />
       </div>
     </div>

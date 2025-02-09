@@ -33,7 +33,7 @@ const Signup = () => {
         setError(data.message);
       }
     } catch (error) {
-      setError("Signup failed. Try again."+error);
+      setError("Signup failed. Try again." + error);
     }
   };
 
@@ -47,27 +47,10 @@ const Signup = () => {
       >
         <h2 className="text-2xl font-semibold text-purple-700 mb-4">Sign Up</h2>
         {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
-        <input
-          type="text"
-          placeholder="Name"
-          className="w-full p-2 border rounded-md mb-3"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full p-2 border rounded-md mb-3"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full p-2 border rounded-md mb-3"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <input type="text" placeholder="Name" className="w-full p-2 border rounded-md mb-3" value={name} onChange={(e) => setName(e.target.value)} />
+        <input type="email" placeholder="Email" className="w-full p-2 border rounded-md mb-3" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="password" placeholder="Password" className="w-full p-2 border rounded-md mb-3" value={password} onChange={(e) => setPassword(e.target.value)} />
+
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -78,12 +61,7 @@ const Signup = () => {
         </motion.button>
         <p className="text-sm text-gray-600 mt-4 text-center">
           Already have an account?{" "}
-          <span
-            className="text-purple-600 cursor-pointer hover:underline"
-            onClick={() => navigate("/login")}
-          >
-            Login
-          </span>
+          <span className="text-purple-600 cursor-pointer hover:underline" onClick={() => navigate("/login")}>Login</span>
         </p>
       </motion.div>
     </div>

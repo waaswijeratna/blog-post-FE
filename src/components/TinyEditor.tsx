@@ -1,6 +1,6 @@
 import React from "react";
 import { Editor } from "@tinymce/tinymce-react";
-import { storage } from "../../firebaseConfig"; // Firebase Storage instance
+import { storage } from "../../firebaseConfig"; 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 interface TinyEditorProps {
@@ -11,7 +11,7 @@ interface TinyEditorProps {
 const TinyEditor: React.FC<TinyEditorProps> = ({ value, onChange }) => {
   const uploadImageToFirebase = async (blobInfo: Blob): Promise<string> => {
     return new Promise((resolve, reject) => {
-      const file = blobInfo; // Ensure it's a Blob
+      const file = blobInfo; 
       const fileName = `editor-images/${Date.now()}-${Math.random()}.jpg`;
       const storageRef = ref(storage, fileName);
       const uploadTask = uploadBytesResumable(storageRef, file);
@@ -25,7 +25,7 @@ const TinyEditor: React.FC<TinyEditorProps> = ({ value, onChange }) => {
         },
         async () => {
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          resolve(downloadURL); // ✅ Returns the image URL
+          resolve(downloadURL); 
         }
       );
     });
@@ -53,7 +53,7 @@ const TinyEditor: React.FC<TinyEditorProps> = ({ value, onChange }) => {
             "image media link",
           file_picker_types: "image",
           images_upload_handler: async (blobInfo) => {
-            return uploadImageToFirebase(blobInfo.blob()); // 🔥 FIX: Returns a Promise<string>
+            return uploadImageToFirebase(blobInfo.blob()); 
           },
         }}
       />

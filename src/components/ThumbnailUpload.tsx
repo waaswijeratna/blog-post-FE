@@ -14,7 +14,6 @@ const ThumbnailUpload: React.FC<ThumbnailUploadProps> = ({ onUploadComplete, cur
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
 
-  // If there's an existing thumbnail, show its preview
   useEffect(() => {
     if (currentThumbnail) {
       setPreview(currentThumbnail);
@@ -53,12 +52,12 @@ const ThumbnailUpload: React.FC<ThumbnailUploadProps> = ({ onUploadComplete, cur
 
   const handleRemoveImage = async () => {
     if (currentThumbnail) {
-      const imageRef = ref(storage, currentThumbnail); // Get reference to the image in Firebase storage
+      const imageRef = ref(storage, currentThumbnail); 
       try {
-        await deleteObject(imageRef); // Delete the image from Firebase
+        await deleteObject(imageRef);
         console.log("Image deleted from Firebase.");
-        setPreview(null); // Clear the preview
-        onRemoveComplete?.(null); // Notify parent to clear the image URL
+        setPreview(null); 
+        onRemoveComplete?.(null); 
       } catch (error) {
         console.error("Error deleting image from Firebase", error);
       }
@@ -76,11 +75,7 @@ const ThumbnailUpload: React.FC<ThumbnailUploadProps> = ({ onUploadComplete, cur
       />
       <label htmlFor="thumbnailUpload" className="flex flex-col items-center text-gray-500">
         {preview ? (
-          <img
-            src={preview}
-            alt="Thumbnail Preview"
-            className="w-40 h-40 object-cover rounded-lg shadow-md"
-          />
+          <img src={preview} alt="Thumbnail Preview" className="w-40 h-40 object-cover rounded-lg shadow-md"/>
         ) : (
           <FiUploadCloud size={40} className="text-purple-500 mb-2" />
         )}
@@ -89,19 +84,10 @@ const ThumbnailUpload: React.FC<ThumbnailUploadProps> = ({ onUploadComplete, cur
 
       {preview && (
         <div className="mt-3 flex gap-2">
-          <button
-            onClick={handleUpload}
-            className="bg-purple-500 text-white py-2 px-4 rounded-md hover:bg-purple-600 transition-all"
-            disabled={uploading}
-          >
+          <button onClick={handleUpload} className="bg-purple-500 text-white py-2 px-4 rounded-md hover:bg-purple-600 transition-all" disabled={uploading}>
             {uploading ? "Uploading..." : "Upload New"}
           </button>
-          <button
-            onClick={handleRemoveImage}
-            className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition-all"
-          >
-            Remove Image
-          </button>
+          <button onClick={handleRemoveImage}className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition-all"> Remove Image</button>
         </div>
       )}
     </div>
